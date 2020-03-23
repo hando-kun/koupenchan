@@ -1,0 +1,58 @@
+'use strict';
+//えらいメンションデータセット
+//すごいメンションデータセット
+//やすんでメンションデータセット
+const praiseMention = [
+  'えらーい！',
+  'えらいんだよ～',
+  'すごーい！',
+  'すごいんだよ～',
+  'がんばったんだね！',
+  'おつかれさま！',
+  'やすんでやすんで！',
+  'チョコナナナたびゆ？'
+];
+const CronJob = require('cron').CronJob;
+
+module.exports = (robot) => {
+  robot.hear(/@(コウペンちゃん|koupenchan) (.*)/i, (msg) => {
+    const user_id = msg.message.user.id;
+    if (~msg.match[2].indexOf('ほめて')) {
+      msg.send(`<@${user_id}> `+praiseMention[Math.floor(Math.random()*praiseMention.length)]);
+    } else if (~msg.match[2].indexOf('いる？')) {
+      msg.send(`<@${user_id}> いるよー！`);
+    } else if (~msg.match[2].indexOf('どこ？')) {
+      msg.send(`<@${user_id}> ここだよー！`);
+    } else if (~msg.match[2].indexOf('かわいい')) {
+      msg.send(`<@${user_id}> きみもかわいいんだよー！`);
+    } else {
+      msg.send(`わーい！<@${user_id}>だ！！${msg.match[2]}なの？`);
+    }
+  });
+  robot.hear(/@(?!.*(コウペンちゃん|koupenchan))(.*) (.*)/i, (msg) => {
+    if (~msg.match[3].indexOf('えらい')) {
+      msg.send(`<@${msg.match[2]}> `+praiseMention[Math.floor(Math.random()*praiseMention.length)]);
+    } else {
+      msg.send(`わーい！<@${user_id}>だ！！${msg.match[2]}なの？`);
+    }
+  });
+  /*robot.hear(/list/i, (msg) => {
+    console.log(memberlist.outputMemberlist);
+  });*/
+  new CronJob({
+    cronTime: '0 0 10 * * 1-5',
+    onTick: function() {
+      robot.send({room: 'hando_sandbox'}, '出社してえら～い！');
+    },
+    start: true,
+    timeZone: 'Asia/Tokyo'
+  });
+  new CronJob({
+    cronTime: '0 0 19 * * 1-5',
+    onTick: function() {
+      robot.send({room: 'hando_sandbox'}, 'いっしょに帰ろー！');
+    },
+    start: true,
+    timeZone: 'Asia/Tokyo'
+  });
+};
